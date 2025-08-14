@@ -26,7 +26,7 @@ import { authClient } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -43,7 +43,11 @@ type SignInValues = z.infer<typeof signInSchema>;
 export function SignInForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const redirect = searchParams.get("redirect");
 
   const form = useForm<SignInValues>({
     resolver: zodResolver(signInSchema),
@@ -52,7 +56,6 @@ export function SignInForm() {
       password: "",
       rememberMe: false,
     },
-     
   });
 
   async function onSubmit({ email, password, rememberMe }: SignInValues) {
@@ -71,7 +74,7 @@ export function SignInForm() {
       setError(error.message || "Something went wrong");
     } else {
       toast.success("Signed in successfully");
-      router.push("/dashboard");
+      router.push(redirect ?? "/dashboard");
     }
   }
 
