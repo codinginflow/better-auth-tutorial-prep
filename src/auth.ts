@@ -9,8 +9,13 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
-    // TODO: Put some feature behind an email verification check
     // requireEmailVerification: true, // We don't want to block login completely
+    minPasswordLength: 8,
+    password: {
+      // TODO: Where can I set custom validation rules?
+      // verify({ password }) {
+      // },
+    },
     async sendResetPassword({ user, url, token }, request) {
       await sendEmail({
         to: user.email,
@@ -29,6 +34,7 @@ export const auth = betterAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     },
   },
+  // TODO: Put some feature behind an email verification check
   emailVerification: {
     sendOnSignUp: true,
     autoSignInAfterVerification: true,

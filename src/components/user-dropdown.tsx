@@ -29,6 +29,11 @@ export function UserDropdown({ user }: UserDropdownProps) {
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link href="/profile">
+            <UserIcon className="size-4" /> <span>Profile</span>
+          </Link>
+        </DropdownMenuItem>
         {user.role === "admin" && <AdminItem />}
         <SignOutItem />
       </DropdownMenuContent>

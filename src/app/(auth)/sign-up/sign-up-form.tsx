@@ -33,8 +33,11 @@ const signUpSchema = z
   .object({
     username: z.string().min(1, { message: "Username is required" }),
     email: z.email({ message: "Please enter a valid email" }),
-    // TODO: Password validation anpassen mit auth.ts config
-    password: z.string().min(1, { message: "Password is required" }),
+    // TODO: Password validation angleichen mit auth.ts config
+    password: z
+      .string()
+      .min(1, { message: "Password is required" })
+      .min(8, { message: "Password must be at least 8 characters" }),
     passwordConfirmation: z
       .string()
       .min(1, { message: "Please confirm password" }),
@@ -59,7 +62,6 @@ export function SignUpForm() {
       password: "",
       passwordConfirmation: "",
     },
-     
   });
 
   async function onSubmit({ email, password, username }: SignUpValues) {
