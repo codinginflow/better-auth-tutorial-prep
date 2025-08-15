@@ -12,37 +12,34 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { authClient } from "@/lib/auth-client";
+import { passwordSchema } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const passwordSchema = z.object({
+const updatePasswordSchema = z.object({
   currentPassword: z
     .string()
     .min(1, { message: "Current password is required" }),
-  // TODO: We should extract the PW validation logic to prevent duplication (here, signup-form, and auth.ts)
-  newPassword: z
-    .string()
-    .min(1, { message: "New password is required" })
-    .min(8, { message: "Password must be at least 8 characters" }),
+  newPassword: passwordSchema,
 });
 
-type PasswordValues = z.infer<typeof passwordSchema>;
+type UpdatePasswordValues = z.infer<typeof updatePasswordSchema>;
 
 export function PasswordForm() {
   const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const form = useForm<PasswordValues>({
-    resolver: zodResolver(passwordSchema),
+  const form = useForm<UpdatePasswordValues>({
+    resolver: zodResolver(updatePasswordSchema),
     defaultValues: {
       currentPassword: "",
       newPassword: "",
     },
   });
 
-  async function onSubmit(values: PasswordValues) {
+  async function onSubmit(values: UpdatePasswordValues) {
     setStatus(null);
     setError(null);
 
@@ -70,6 +67,7 @@ export function PasswordForm() {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+            {/* OAuth users (without a password) can use the "forgot password" flow */}
             <FormField
               control={form.control}
               name="currentPassword"

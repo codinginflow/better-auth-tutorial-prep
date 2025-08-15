@@ -1,7 +1,9 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
+import { APIError, createAuthMiddleware } from "better-auth/api";
 import { sendEmail } from "./lib/email";
 import prisma from "./lib/prisma";
+import { passwordSchema } from "./lib/validation";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -10,12 +12,7 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     // requireEmailVerification: true, // We don't want to block login completely
-    minPasswordLength: 8,
-    password: {
-      // TODO: Where can I set custom validation rules?
-      // verify({ password }) {
-      // },
-    },
+    // minPasswordLength: 8, // Handled by our Zod schema
     async sendResetPassword({ user, url, token }, request) {
       await sendEmail({
         to: user.email,
@@ -34,7 +31,6 @@ export const auth = betterAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     },
   },
-  // TODO: Put some feature behind an email verification check
   emailVerification: {
     sendOnSignUp: true,
     autoSignInAfterVerification: true,
@@ -44,6 +40,41 @@ export const auth = betterAuth({
         subject: "Verify your email address",
         text: `Click the link to verify your email: ${url}`,
       });
+    },
+  },
+  hooks: {
+    before: createAuthMiddleware(async (ctx) => {
+      // TODO: Include changePassword path
+      if (ctx.path === "/sign-up/email") {
+        const { error } = passwordSchema.safeParse(ctx.body.password);
+        if (error) {
+          console.log(error);
+          throw new APIError("BAD_REQUEST", {
+            message: "Invalid password",
+          });
+        }
+      }
+    }),
+  },
+  user: {
+    changeEmail: {
+      enabled: true,
+      sendChangeEmailVerification: async (
+        { user, newEmail, url, token },
+        request
+      ) => {
+        await sendEmail({
+          to: user.email,
+          subject: "Approve email change",
+          text: `Your email has been changed to ${newEmail}. Click the link to approve the change: ${url}`,
+        });
+      },
+    },
+    additionalFields: {
+      role: {
+        type: "string",
+        input: false,
+      },
     },
   },
   // Doesn't work in dev because missing IP header
@@ -60,12 +91,4 @@ export const auth = betterAuth({
   //   storage: "database",
   //   modelName: "rate_limit", // requires npx @better-auth/cli generate
   // },
-  user: {
-    additionalFields: {
-      role: {
-        type: "string",
-        input: false,
-      },
-    },
-  },
 });

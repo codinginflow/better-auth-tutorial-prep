@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
+import { passwordSchema } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -33,11 +34,7 @@ const signUpSchema = z
   .object({
     username: z.string().min(1, { message: "Username is required" }),
     email: z.email({ message: "Please enter a valid email" }),
-    // TODO: Password validation angleichen mit auth.ts config
-    password: z
-      .string()
-      .min(1, { message: "Password is required" })
-      .min(8, { message: "Password must be at least 8 characters" }),
+    password: passwordSchema,
     passwordConfirmation: z
       .string()
       .min(1, { message: "Please confirm password" }),
