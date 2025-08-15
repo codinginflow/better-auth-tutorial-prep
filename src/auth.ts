@@ -44,9 +44,9 @@ export const auth = betterAuth({
   },
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
-      // TODO: Include changePassword path
-      if (ctx.path === "/sign-up/email") {
-        const { error } = passwordSchema.safeParse(ctx.body.password);
+      if (ctx.path === "/sign-up/email" || ctx.path === "/change-password") {
+        const password = ctx.body.newPassword || ctx.body.password;
+        const { error } = passwordSchema.safeParse(password);
         if (error) {
           console.log(error);
           throw new APIError("BAD_REQUEST", {
