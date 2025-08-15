@@ -11,6 +11,7 @@ import {
 import { authClient } from "@/lib/auth-client";
 import { User } from "@/types";
 import { LogOutIcon, ShieldIcon, UserIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -23,7 +24,17 @@ export function UserDropdown({ user }: UserDropdownProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm hover:bg-accent">
-        <UserIcon className="size-4" />
+        {user.image ? (
+          <Image
+            src={user.image}
+            alt="User avatar"
+            width={16}
+            height={16}
+            className="rounded-full object-cover"
+          />
+        ) : (
+          <UserIcon className="size-4" />
+        )}
         <span className="truncate max-w-[12rem]">{user.name}</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
