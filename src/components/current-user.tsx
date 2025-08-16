@@ -25,6 +25,7 @@ export function CurrentUser() {
 
   return (
     <div className="mt-6 space-y-1">
+      <p>useSession:</p>
       <p className="text-base">Signed in as {user.name ?? "User"}</p>
       <p className="text-sm text-muted-foreground">{user.email}</p>
     </div>
