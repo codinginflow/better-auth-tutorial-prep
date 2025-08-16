@@ -1,3 +1,4 @@
+import { ModeToggle } from "@/components/mode-toggle";
 import { UserDropdown } from "@/components/user-dropdown";
 import { getServerSession } from "@/lib/get-session";
 import Link from "next/link";
@@ -15,8 +16,8 @@ export async function Navbar() {
         <Link href="/dashboard" className="font-semibold">
           Better-Auth Tutorial
         </Link>
-        <div>
-          {/* TODO: Add theme toggle */}
+        <div className="flex items-center gap-2">
+          <ModeToggle />
           <UserDropdown user={user} />
         </div>
       </div>
