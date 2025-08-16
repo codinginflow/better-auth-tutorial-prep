@@ -4,6 +4,7 @@ import { ProfileDetailsForm } from "@/app/(main)/profile/profile-details-form";
 import { getServerSession } from "@/lib/get-session";
 import type { Metadata } from "next";
 import { unauthorized } from "next/navigation";
+import { setTimeout } from "node:timers/promises";
 
 export const metadata: Metadata = {
   title: "Profile",
@@ -14,6 +15,8 @@ export default async function ProfilePage() {
   const user = session?.user;
 
   if (!user) unauthorized();
+
+  await setTimeout(800);
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-12 w-full">

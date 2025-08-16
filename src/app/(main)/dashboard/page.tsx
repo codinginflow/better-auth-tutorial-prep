@@ -16,6 +16,7 @@ import { CalendarDaysIcon, MailIcon, ShieldIcon, UserIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { unauthorized } from "next/navigation";
+import { setTimeout } from "node:timers/promises";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -26,6 +27,8 @@ export default async function DashboardPage() {
   const user = session?.user;
 
   if (!user) unauthorized();
+
+  await setTimeout(800);
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
