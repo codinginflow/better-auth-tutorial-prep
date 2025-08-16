@@ -1,5 +1,4 @@
 import { CurrentUser } from "@/components/current-user";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -55,22 +54,19 @@ function EmailVerificationAlert({ user }: EmailVerificationAlertProps) {
   if (user.emailVerified) return null;
 
   return (
-    <Alert className="border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950 items-center">
-      <MailIcon className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-      <AlertDescription className="flex items-center justify-between">
-        <span className="text-amber-800 dark:text-amber-200">
-          Please verify your email address to access all features.
-        </span>
-        <Button
-          variant="outline"
-          size="sm"
-          className="ml-4 hover:text-amber-800 border-amber-300 text-amber-800 hover:bg-amber-100 dark:border-amber-700 dark:text-amber-200 dark:hover:bg-amber-900 bg-transparent"
-          asChild
-        >
+    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 dark:bg-yellow-950/30 dark:border-yellow-800/50">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <MailIcon className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+          <span className="text-yellow-800 dark:text-yellow-200">
+            Please verify your email address to access all features.
+          </span>
+        </div>
+        <Button size="sm" asChild>
           <Link href="/verify-email">Verify Email</Link>
         </Button>
-      </AlertDescription>
-    </Alert>
+      </div>
+    </div>
   );
 }
 
