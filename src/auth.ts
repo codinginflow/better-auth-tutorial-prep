@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { APIError, createAuthMiddleware } from "better-auth/api";
+import { APIError } from "better-auth/api";
 import { sendEmail } from "./lib/email";
 import prisma from "./lib/prisma";
 import { passwordSchema } from "./lib/validation";
@@ -42,19 +42,22 @@ export const auth = betterAuth({
       });
     },
   },
-  hooks: {
-    before: createAuthMiddleware(async (ctx) => {
-      if (ctx.path === "/sign-up/email" || ctx.path === "/change-password") {
-        const password = ctx.body.newPassword || ctx.body.password;
-        const { error } = passwordSchema.safeParse(password);
-        if (error) {
-          console.log(error);
-          throw new APIError("BAD_REQUEST", {
-            message: "Invalid password",
-          });
-        }
-      }
-    }),
+  databaseHooks: {
+    account: {
+      create: {
+        // TODO: Test if this works for both sign up and change password
+        async before(account, context) {
+          if (account.password) {
+            const { error } = passwordSchema.safeParse(account.password);
+            if (error) {
+              throw new APIError("BAD_REQUEST", {
+                message: "Invalid password",
+              });
+            }
+          }
+        },
+      },
+    },
   },
   user: {
     changeEmail: {
