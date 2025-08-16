@@ -11,11 +11,12 @@ export async function Navbar() {
 
   return (
     <header className="border-b bg-background/60 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         <Link href="/dashboard" className="font-semibold">
           Better-Auth Tutorial
         </Link>
         <div>
+          {/* TODO: Add theme toggle */}
           <UserDropdown user={user} />
         </div>
       </div>

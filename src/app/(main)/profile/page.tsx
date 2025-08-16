@@ -16,15 +16,19 @@ export default async function ProfilePage() {
   if (!user) unauthorized();
 
   return (
-    <main className="mx-auto max-w-lg px-4 py-12 w-full">
+    <main className="mx-auto max-w-6xl px-4 py-12 w-full">
       <h1 className="text-2xl font-semibold">Profile</h1>
       <p className="text-muted-foreground mt-2">
         Update your account details, email, and password.
       </p>
-      <div className="mt-6 space-y-8">
-        <ProfileDetailsForm user={user} />
-        <EmailForm currentEmail={user.email} />
-        <PasswordForm />
+      <div className="mt-6 flex flex-col lg:flex-row gap-8">
+        <div className="flex-1">
+          <ProfileDetailsForm user={user} />
+        </div>
+        <div className="flex-1 space-y-8">
+          <EmailForm currentEmail={user.email} />
+          <PasswordForm />
+        </div>
       </div>
     </main>
   );
